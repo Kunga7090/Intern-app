@@ -1,0 +1,22 @@
+-- Add third batch of internship listings with broader city and category coverage
+insert into public.internships (name, city, type, category, featured) values
+  ('Boston Children''s Hospital Research Intern',   'Boston',      'in-person', 'Biology',          false),
+  ('State Street Quantitative Finance Intern',      'Boston',      'in-person', 'Business',         false),
+  ('Vertex Pharmaceuticals Drug Discovery Intern',  'Boston',      'in-person', 'Biology',          false),
+  ('TechHub Boston Full-Stack Dev Intern',          'Boston',      'virtual',   'Computer Science', false),
+  ('Harvard Kennedy School Policy Intern',          'Cambridge',   'in-person', 'Law',              false),
+  ('Draper Laboratory Robotics Intern',             'Cambridge',   'in-person', 'Engineering',      false),
+  ('Google Cambridge Software Engineering Intern',  'Cambridge',   'in-person', 'Computer Science', true),
+  ('Somerville Arts Council Creative Intern',       'Somerville',  'in-person', 'Arts',             false),
+  ('Biogen Neuroscience Research Intern',           'Cambridge',   'in-person', 'Biology',          false),
+  ('Worcester Polytechnic Engineering Co-op',       'Worcester',   'in-person', 'Engineering',      false),
+  ('Seven Hills Foundation Nonprofit Intern',       'Worcester',   'in-person', 'Education',        false),
+  ('MGM Springfield Hospitality Intern',            'Springfield', 'in-person', 'Business',         false),
+  ('Lowell General Hospital Clinical Intern',       'Lowell',      'in-person', 'Biology',          false),
+  ('UMass Lowell Computer Science Co-op',           'Lowell',      'in-person', 'Computer Science', false),
+  ('Nantucket Conservation Foundation Intern',      'Nantucket',   'in-person', 'Biology',          false),
+  ('Cape Cod Times Journalism Intern',              'Barnstable',  'in-person', 'Arts',             false),
+  ('Remote Product Management Fellowship',          'Boston',      'virtual',   'Business',         false),
+  ('Virtual Nonprofit Grant Writing Intern',        'Worcester',   'virtual',   'Education',        false),
+  ('Remote Legal Research Assistant',               'Boston',      'virtual',   'Law',              false),
+  ('Online Arts Education Curriculum Intern',       'Lowell',      'virtual',   'Education',        false);

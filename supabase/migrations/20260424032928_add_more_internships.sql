@@ -1,0 +1,20 @@
+-- Add more internship listings across additional cities and categories
+insert into public.internships (name, city, type, category, featured) values
+  ('Mass General Hospital Research Fellow',    'Boston',      'in-person', 'Biology',          false),
+  ('Fidelity Investments Finance Intern',      'Boston',      'in-person', 'Business',         false),
+  ('Wayfair Data Science Intern',              'Boston',      'virtual',   'Computer Science', false),
+  ('Harvard Law School Legal Intern',          'Cambridge',   'in-person', 'Law',              false),
+  ('Broad Institute Genomics Intern',          'Cambridge',   'in-person', 'Biology',          false),
+  ('Rapid7 Cybersecurity Intern',              'Cambridge',   'virtual',   'Computer Science', false),
+  ('Tufts Medical Center Clinical Intern',     'Somerville',  'in-person', 'Biology',          false),
+  ('Edgewater Consulting Business Intern',     'Somerville',  'in-person', 'Business',         false),
+  ('UMass Medical School Research Aide',       'Worcester',   'in-person', 'Biology',          false),
+  ('Hanover Insurance Group Finance Intern',   'Worcester',   'in-person', 'Business',         false),
+  ('MassMutual Engineering Intern',            'Springfield', 'in-person', 'Engineering',      false),
+  ('Baystate Health Nursing Extern',           'Springfield', 'in-person', 'Biology',          false),
+  ('Lowell Public Schools Education Intern',   'Lowell',      'in-person', 'Education',        false),
+  ('Wang Theatre Arts Administration Intern',  'Lowell',      'in-person', 'Arts',             false),
+  ('Cape Cod Healthcare Research Intern',      'Barnstable',  'in-person', 'Biology',          false),
+  ('Remote UX Research Internship',            'Boston',      'virtual',   'Marketing',        false),
+  ('Virtual Machine Learning Fellowship',      'Cambridge',   'virtual',   'Computer Science', false),
+  ('Remote Environmental Science Intern',      'Worcester',   'virtual',   'Biology',          false);
