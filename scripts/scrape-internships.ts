@@ -3,12 +3,16 @@ import { type ScrapedInternship, scrapedInternshipSchema } from "./lib/types";
 import * as collegevine from "./sources/collegevine";
 import * as pathways from "./sources/pathways-to-science";
 
-type SourceResult = {
-  source: string;
-  found: number;
-  validated: ScrapedInternship[];
-  error?: string;
-};
+type SourceName = "Pathways" | "CollegeVine";
+type Tagged = ScrapedInternship & { source: SourceName };
+
+const SOURCES: Array<{
+  name: SourceName;
+  scrape: () => Promise<ScrapedInternship[]>;
+}> = [
+  { name: "Pathways", scrape: pathways.scrape },
+  { name: "CollegeVine", scrape: collegevine.scrape },
+];
 
 type Args = {
   dry: boolean;
@@ -28,16 +32,16 @@ function parseArgs(argv: string[]): Args {
 }
 
 async function runSource(
-  name: string,
+  name: SourceName,
   fn: () => Promise<ScrapedInternship[]>,
-): Promise<SourceResult> {
+): Promise<{ found: number; tagged: Tagged[] }> {
   try {
     const raw = await fn();
-    const validated: ScrapedInternship[] = [];
+    const tagged: Tagged[] = [];
     for (const item of raw) {
       const parsed = scrapedInternshipSchema.safeParse(item);
       if (parsed.success) {
-        validated.push(parsed.data);
+        tagged.push({ ...parsed.data, source: name });
       } else {
         console.warn(
           `[${name}] dropped invalid record:`,
@@ -46,24 +50,12 @@ async function runSource(
         );
       }
     }
-    return { source: name, found: raw.length, validated };
+    return { found: raw.length, tagged };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[${name}] scrape failed: ${msg}`);
-    return { source: name, found: 0, validated: [], error: msg };
+    return { found: 0, tagged: [] };
   }
-}
-
-function dedupeWithin(rows: ScrapedInternship[]): ScrapedInternship[] {
-  const seen = new Set<string>();
-  const out: ScrapedInternship[] = [];
-  for (const r of rows) {
-    const key = r.name.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(r);
-  }
-  return out;
 }
 
 async function fetchExistingNames(): Promise<Set<string>> {
@@ -72,10 +64,10 @@ async function fetchExistingNames(): Promise<Set<string>> {
   if (error) {
     throw new Error(`Failed to query existing internships: ${error.message}`);
   }
-  return new Set((data ?? []).map((r) => String(r.name).toLowerCase()));
+  return new Set((data ?? []).map((r) => r.name.toLowerCase()));
 }
 
-function printDryRunTable(rows: ScrapedInternship[]) {
+function printDryRunTable(rows: Tagged[]) {
   console.log("\nWould insert these rows (dry run):");
   console.table(
     rows.map((r) => ({
@@ -83,23 +75,35 @@ function printDryRunTable(rows: ScrapedInternship[]) {
       city: r.city,
       type: r.type,
       category: r.category,
+      source: r.source,
     })),
   );
+}
+
+function stripSource(rows: Tagged[]): ScrapedInternship[] {
+  return rows.map(({ source: _source, ...row }) => row);
 }
 
 async function main() {
   const args = parseArgs(process.argv);
 
-  const [pathwaysResult, collegevineResult] = await Promise.all([
-    runSource("Pathways", () => pathways.scrape()),
-    runSource("CollegeVine", () => collegevine.scrape()),
-  ]);
+  const sourceResults = await Promise.all(
+    SOURCES.map(async (s) => ({
+      name: s.name,
+      ...(await runSource(s.name, s.scrape)),
+    })),
+  );
 
-  const allFound = [
-    ...pathwaysResult.validated,
-    ...collegevineResult.validated,
-  ];
-  const deduped = dedupeWithin(allFound);
+  const seen = new Set<string>();
+  const dedupedTagged: Tagged[] = [];
+  for (const { tagged } of sourceResults) {
+    for (const row of tagged) {
+      const key = row.name.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      dedupedTagged.push(row);
+    }
+  }
 
   let existing: Set<string>;
   try {
@@ -110,49 +114,48 @@ async function main() {
     process.exit(1);
   }
 
-  let toInsert = deduped.filter((r) => !existing.has(r.name.toLowerCase()));
+  let toInsert = dedupedTagged.filter(
+    (r) => !existing.has(r.name.toLowerCase()),
+  );
   if (args.limit !== undefined) {
     toInsert = toInsert.slice(0, args.limit);
   }
 
-  const pathwaysNew = pathwaysResult.validated.filter(
-    (r) => !existing.has(r.name.toLowerCase()),
-  ).length;
-  const collegevineNew = collegevineResult.validated.filter(
-    (r) => !existing.has(r.name.toLowerCase()),
-  ).length;
+  const newBySource = new Map<SourceName, number>();
+  for (const r of toInsert) {
+    newBySource.set(r.source, (newBySource.get(r.source) ?? 0) + 1);
+  }
+
+  const summary = sourceResults
+    .map(
+      (r) =>
+        `${r.name}: ${r.found} found, ${newBySource.get(r.name) ?? 0} new.`,
+    )
+    .join(" ");
 
   if (args.dry) {
     printDryRunTable(toInsert);
     console.log(
-      `\nPathways: ${pathwaysResult.found} found, ${pathwaysNew} new. ` +
-        `CollegeVine: ${collegevineResult.found} found, ${collegevineNew} new. ` +
-        `Would insert: ${toInsert.length} (dry run — no writes performed).`,
+      `\n${summary} Would insert: ${toInsert.length} (dry run — no writes performed).`,
     );
     return;
   }
 
   if (toInsert.length === 0) {
-    console.log(
-      `Pathways: ${pathwaysResult.found} found, ${pathwaysNew} new. ` +
-        `CollegeVine: ${collegevineResult.found} found, ${collegevineNew} new. ` +
-        `Inserted 0 total (nothing new to insert).`,
-    );
+    console.log(`${summary} Inserted 0 total (nothing new to insert).`);
     return;
   }
 
   const admin = createAdminClient();
-  const { error } = await admin.from("internships").insert(toInsert);
+  const { error } = await admin
+    .from("internships")
+    .insert(stripSource(toInsert));
   if (error) {
     console.error(`Insert failed: ${error.message}`);
     process.exit(1);
   }
 
-  console.log(
-    `Pathways: ${pathwaysResult.found} found, ${pathwaysNew} new. ` +
-      `CollegeVine: ${collegevineResult.found} found, ${collegevineNew} new. ` +
-      `Inserted ${toInsert.length} total.`,
-  );
+  console.log(`${summary} Inserted ${toInsert.length} total.`);
 }
 
 main().catch((err) => {

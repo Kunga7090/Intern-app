@@ -1,11 +1,11 @@
 import * as cheerio from "cheerio";
 import { fetchPage } from "../lib/fetch-page";
+import { type CategoryTable, inferCategory, inferType } from "../lib/infer";
 import type { ScrapedInternship } from "../lib/types";
 
-export const COLLEGEVINE_URL =
-  "https://blog.collegevine.com/high-school-internships-boston";
+const URL = "https://blog.collegevine.com/high-school-internships-boston";
 
-const CATEGORY_KEYWORDS: Array<[string, RegExp]> = [
+const CATEGORY_KEYWORDS: CategoryTable = [
   [
     "Computer Science",
     /\b(software|coding|programming|computer science|cyber|data science|AI|artificial intelligence|machine learning|web)\b/i,
@@ -27,23 +27,11 @@ const CATEGORY_KEYWORDS: Array<[string, RegExp]> = [
   ["Government", /\b(government|policy|civic|legal|law)\b/i],
 ];
 
-function inferCategory(text: string): string {
-  for (const [cat, rx] of CATEGORY_KEYWORDS) {
-    if (rx.test(text)) return cat;
-  }
-  return "General";
-}
-
-function inferType(text: string): "virtual" | "in-person" {
-  return /\b(online|remote|virtual)\b/i.test(text) ? "virtual" : "in-person";
-}
-
 const NUMBERED_RX = /^\s*(\d{1,2})\.\s+(.*)$/;
+const MAX_DESCRIPTION_SIBLINGS = 8;
 
-export async function scrape(
-  url: string = COLLEGEVINE_URL,
-): Promise<ScrapedInternship[]> {
-  const html = await fetchPage(url);
+export async function scrape(): Promise<ScrapedInternship[]> {
+  const html = await fetchPage(URL);
   const $ = cheerio.load(html);
   const results: ScrapedInternship[] = [];
 
@@ -59,7 +47,11 @@ export async function scrape(
     let descriptionParts = "";
     let $sibling = $h3.next();
     let steps = 0;
-    while ($sibling.length && steps < 8 && !$sibling.is("h2, h3")) {
+    while (
+      $sibling.length &&
+      steps < MAX_DESCRIPTION_SIBLINGS &&
+      !$sibling.is("h2, h3")
+    ) {
       descriptionParts += ` ${$sibling.text()}`;
       $sibling = $sibling.next();
       steps++;
@@ -70,7 +62,7 @@ export async function scrape(
       name: name.slice(0, 200),
       city: "Boston",
       type: inferType(combined),
-      category: inferCategory(combined),
+      category: inferCategory(combined, CATEGORY_KEYWORDS, "General"),
       featured: false,
     });
   });
