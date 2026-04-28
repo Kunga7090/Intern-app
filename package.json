@@ -8,7 +8,9 @@
     "start": "next start",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "scrape:internships": "tsx --env-file=.env.local scripts/scrape-internships.ts",
+    "scrape:internships:dry": "tsx --env-file=.env.local scripts/scrape-internships.ts --dry"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
@@ -31,8 +33,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cheerio": "^1.0.0",
     "supabase": "^2.90.0",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }
