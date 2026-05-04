@@ -1,9 +1,10 @@
 import * as cheerio from "cheerio";
+import type { AnyNode } from "domhandler";
 import { fetchPage } from "../lib/fetch-page";
 import { type CategoryTable, inferCategory, inferType } from "../lib/infer";
 import type { ScrapedInternship } from "../lib/types";
 
-const URL =
+const SOURCE_URL =
   "https://www.pathwaystoscience.org/programs.aspx?u=HighSchool_High+School+Students&submit=y";
 
 const STEM_KEYWORDS: CategoryTable = [
@@ -29,15 +30,15 @@ const STEM_KEYWORDS: CategoryTable = [
 ];
 
 export async function scrape(): Promise<ScrapedInternship[]> {
-  const html = await fetchPage(URL);
+  const html = await fetchPage(SOURCE_URL);
   const $ = cheerio.load(html);
   const results: ScrapedInternship[] = [];
 
   const headerDivs = $("div.progigert").filter(
-    (_, el) => $(el).find("h2").length > 0,
+    (_: number, el: AnyNode) => $(el).find("h2").length > 0,
   );
 
-  headerDivs.each((_, headerEl) => {
+  headerDivs.each((_: number, headerEl: AnyNode) => {
     const $header = $(headerEl);
     const locationText = $header.find("span").first().text().trim();
     const locMatch = locationText.match(/\(([^,]+),\s*([A-Z]{2})\)/);
@@ -49,11 +50,19 @@ export async function scrape(): Promise<ScrapedInternship[]> {
     const $content = $header.next("div.progigert");
     if ($content.length === 0) return;
 
-    const title = $content.find("a").first().text().trim();
+    const $firstLink = $content.find("a").first();
+    const title = $firstLink.text().trim();
     if (!title) return;
+
+    const href = $firstLink.attr("href");
+    const url = href
+      ? new globalThis.URL(href, "https://www.pathwaystoscience.org").href
+      : undefined;
 
     const description = $content.text().trim();
     const combined = `${title} ${description}`;
+
+    if (!url) return;
 
     results.push({
       name: title.slice(0, 200),
@@ -61,6 +70,7 @@ export async function scrape(): Promise<ScrapedInternship[]> {
       type: inferType(combined),
       category: inferCategory(combined, STEM_KEYWORDS, "STEM"),
       featured: false,
+      url,
     });
   });
 

@@ -9,6 +9,7 @@ export interface Internship {
   category: string;
   featured: boolean;
   created_at: string;
+  url: string | null;
 }
 
 export function FeaturedInternshipCard({
@@ -16,7 +17,7 @@ export function FeaturedInternshipCard({
 }: {
   internship: Internship;
 }) {
-  return (
+  const card = (
     <Card className="border-l-4 border-l-primary gap-4">
       <CardHeader className="pb-0">
         <div className="flex flex-wrap items-center gap-2">
@@ -32,5 +33,17 @@ export function FeaturedInternshipCard({
         </div>
       </CardContent>
     </Card>
+  );
+
+  if (!internship.url) return card;
+  return (
+    <a
+      href={internship.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block transition-opacity hover:opacity-80"
+    >
+      {card}
+    </a>
   );
 }

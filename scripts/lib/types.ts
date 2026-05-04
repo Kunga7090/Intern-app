@@ -6,6 +6,7 @@ export const scrapedInternshipSchema = z.object({
   type: z.enum(["virtual", "in-person"]),
   category: z.string().min(1).max(100),
   featured: z.boolean(),
+  url: z.string().url(),
 });
 
 export type ScrapedInternship = z.infer<typeof scrapedInternshipSchema>;

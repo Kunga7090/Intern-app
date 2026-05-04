@@ -58,13 +58,13 @@ async function runSource(
   }
 }
 
-async function fetchExistingNames(): Promise<Set<string>> {
+async function fetchExisting(): Promise<Map<string, string>> {
   const client = createAnonClient();
-  const { data, error } = await client.from("internships").select("name");
+  const { data, error } = await client.from("internships").select("name, id");
   if (error) {
     throw new Error(`Failed to query existing internships: ${error.message}`);
   }
-  return new Set((data ?? []).map((r) => r.name.toLowerCase()));
+  return new Map((data ?? []).map((r) => [r.name.toLowerCase(), r.id]));
 }
 
 function printDryRunTable(rows: Tagged[]) {
@@ -105,9 +105,9 @@ async function main() {
     }
   }
 
-  let existing: Set<string>;
+  let existing: Map<string, string>;
   try {
-    existing = await fetchExistingNames();
+    existing = await fetchExisting();
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(msg);
@@ -116,6 +116,9 @@ async function main() {
 
   let toInsert = dedupedTagged.filter(
     (r) => !existing.has(r.name.toLowerCase()),
+  );
+  const toUpdate = dedupedTagged.filter(
+    (r) => existing.has(r.name.toLowerCase()) && r.url,
   );
   if (args.limit !== undefined) {
     toInsert = toInsert.slice(0, args.limit);
@@ -141,12 +144,24 @@ async function main() {
     return;
   }
 
+  const admin = createAdminClient();
+
+  if (toUpdate.length > 0) {
+    await Promise.all(
+      toUpdate.map((r) =>
+        admin
+          .from("internships")
+          .update({ url: r.url })
+          .eq("id", existing.get(r.name.toLowerCase()) ?? ""),
+      ),
+    );
+  }
+
   if (toInsert.length === 0) {
     console.log(`${summary} Inserted 0 total (nothing new to insert).`);
     return;
   }
 
-  const admin = createAdminClient();
   const { error } = await admin
     .from("internships")
     .insert(stripSource(toInsert));

@@ -9,7 +9,7 @@ import {
 import type { Internship } from "./featured-internship-card";
 
 export function InternshipCard({ internship }: { internship: Internship }) {
-  return (
+  const card = (
     <Card className="gap-3">
       <CardHeader className="pb-0">
         <CardTitle className="text-base leading-snug">
@@ -24,5 +24,17 @@ export function InternshipCard({ internship }: { internship: Internship }) {
         </div>
       </CardContent>
     </Card>
+  );
+
+  if (!internship.url) return card;
+  return (
+    <a
+      href={internship.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block transition-opacity hover:opacity-80"
+    >
+      {card}
+    </a>
   );
 }
