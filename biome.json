@@ -1,7 +1,13 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
   "files": {
-    "includes": ["**", "!.next", "!my-lumos-app", "!.agents"]
+    "includes": [
+      "**",
+      "!.next",
+      "!my-lumos-app",
+      "!.agents",
+      "!.claude/worktrees"
+    ]
   },
   "assist": {
     "actions": {
