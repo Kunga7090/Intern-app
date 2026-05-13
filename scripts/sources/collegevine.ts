@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 import { fetchPage } from "../lib/fetch-page";
 import { type CategoryTable, inferCategory, inferType } from "../lib/infer";
+import { parseDates } from "../lib/parse-date";
 import type { ScrapedInternship } from "../lib/types";
 
 const URL = "https://blog.collegevine.com/high-school-internships-boston";
@@ -107,6 +108,7 @@ export async function scrape(): Promise<ScrapedInternship[]> {
       steps++;
     }
     const combined = `${name} ${descriptionParts}`;
+    const { deadline, application_opens } = parseDates(descriptionParts);
 
     results.push({
       name: name.slice(0, 200),
@@ -115,6 +117,8 @@ export async function scrape(): Promise<ScrapedInternship[]> {
       category: inferCategory(combined, CATEGORY_KEYWORDS, "General"),
       featured: false,
       url: URL_OVERRIDES[normalizeQuotes(name)] ?? url ?? URL,
+      deadline,
+      application_opens,
     });
   });
 

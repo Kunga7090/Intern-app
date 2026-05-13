@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 import { fetchPage } from "../lib/fetch-page";
 import { type CategoryTable, inferCategory, inferType } from "../lib/infer";
+import { parseDates } from "../lib/parse-date";
 import type { ScrapedInternship } from "../lib/types";
 
 const SOURCE_URL =
@@ -61,6 +62,7 @@ export async function scrape(): Promise<ScrapedInternship[]> {
 
     const description = $content.text().trim();
     const combined = `${title} ${description}`;
+    const { deadline, application_opens } = parseDates(description);
 
     if (!url) return;
 
@@ -71,6 +73,8 @@ export async function scrape(): Promise<ScrapedInternship[]> {
       category: inferCategory(combined, STEM_KEYWORDS, "STEM"),
       featured: false,
       url,
+      deadline,
+      application_opens,
     });
   });
 

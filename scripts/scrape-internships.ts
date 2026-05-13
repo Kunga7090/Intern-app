@@ -118,7 +118,9 @@ async function main() {
     (r) => !existing.has(r.name.toLowerCase()),
   );
   const toUpdate = dedupedTagged.filter(
-    (r) => existing.has(r.name.toLowerCase()) && r.url,
+    (r) =>
+      existing.has(r.name.toLowerCase()) &&
+      (r.url || r.deadline || r.application_opens),
   );
   if (args.limit !== undefined) {
     toInsert = toInsert.slice(0, args.limit);
@@ -151,7 +153,13 @@ async function main() {
       toUpdate.map((r) =>
         admin
           .from("internships")
-          .update({ url: r.url })
+          .update({
+            url: r.url,
+            ...(r.deadline !== undefined && { deadline: r.deadline }),
+            ...(r.application_opens !== undefined && {
+              application_opens: r.application_opens,
+            }),
+          })
           .eq("id", existing.get(r.name.toLowerCase()) ?? ""),
       ),
     );
