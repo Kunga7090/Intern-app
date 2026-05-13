@@ -11,8 +11,8 @@ export interface Internship {
   featured: boolean;
   created_at: string;
   url: string | null;
-  deadline: string | null;
-  application_opens: string | null;
+  deadline?: string | null;
+  application_opens?: string | null;
 }
 
 export function FeaturedInternshipCard({
@@ -20,24 +20,6 @@ export function FeaturedInternshipCard({
 }: {
   internship: Internship;
 }) {
-  const todayISO = new Date().toISOString().slice(0, 10);
-  const deadlineFuture =
-    internship.deadline !== null && internship.deadline >= todayISO;
-  const opensFuture =
-    internship.application_opens !== null &&
-    internship.application_opens >= todayISO;
-  const opensPast =
-    internship.application_opens !== null &&
-    internship.application_opens < todayISO;
-  const deadlinePast =
-    internship.deadline !== null && internship.deadline < todayISO;
-
-  const showDeadline = deadlineFuture;
-  const showOpens =
-    internship.application_opens !== null &&
-    (opensFuture ||
-      (internship.deadline !== null && opensPast && deadlinePast));
-
   const deadlineText = internship.deadline
     ? formatDate(internship.deadline)
     : null;
@@ -46,7 +28,7 @@ export function FeaturedInternshipCard({
     : null;
 
   const card = (
-    <Card className="border-l-4 border-l-primary gap-4">
+    <Card className="border-l-4 border-l-primary gap-0">
       <CardHeader className="pb-0">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="default">Featured</Badge>
@@ -54,14 +36,26 @@ export function FeaturedInternshipCard({
         </div>
         <CardTitle className="text-xl">{internship.name}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap items-center gap-2">
+      <CardContent className="flex flex-col gap-0">
+        <div className="flex flex-wrap items-center gap-2 py-3">
           <Badge variant="secondary">{internship.city}</Badge>
           <Badge variant="outline">{internship.type}</Badge>
-          {showDeadline && (
-            <Badge variant="outline">Deadline: {deadlineText}</Badge>
-          )}
-          {showOpens && <Badge variant="outline">Opens: {opensText}</Badge>}
+        </div>
+        <div className="border-t pt-3 flex gap-6">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Application Deadline
+            </span>
+            <span className="text-sm text-foreground">
+              {deadlineText ?? "—"}
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Applications Open
+            </span>
+            <span className="text-sm text-foreground">{opensText ?? "—"}</span>
+          </div>
         </div>
       </CardContent>
     </Card>
