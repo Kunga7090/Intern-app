@@ -7,8 +7,16 @@ import { createClient } from "~/lib/supabase/server";
 export default async function InternshipsPage() {
   const supabase = await createClient();
 
-  const [{ data }, { data: { user } }] = await Promise.all([
-    supabase.from("internships").select("*").order("created_at", { ascending: false }),
+  const [
+    { data },
+    {
+      data: { user },
+    },
+  ] = await Promise.all([
+    supabase
+      .from("internships")
+      .select("*")
+      .order("created_at", { ascending: false }),
     supabase.auth.getUser(),
   ]);
 
@@ -34,8 +42,8 @@ export default async function InternshipsPage() {
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Internships
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          Browse internship opportunities across Massachusetts.
+        <p className="mt-2 text-sm text-muted-foreground">
+          Dates are based on previous application cycles and may change. Please check the official website for the most current information.
         </p>
       </header>
 
