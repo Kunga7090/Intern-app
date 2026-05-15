@@ -33,7 +33,7 @@ export function InternshipCard({ internship }: { internship: Internship }) {
         <div className="border-t pt-3 flex gap-6">
           <div className="flex flex-col gap-0.5">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              Deadline
+              Application Deadline
             </span>
             <span className="text-sm text-foreground">
               {deadlineText ?? "—"}
@@ -41,7 +41,7 @@ export function InternshipCard({ internship }: { internship: Internship }) {
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              Opens
+              Applications Open
             </span>
             <span className="text-sm text-foreground">{opensText ?? "—"}</span>
           </div>

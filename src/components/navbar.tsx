@@ -1,7 +1,11 @@
 "use client";
 
+import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
+import { createClient } from "~/lib/supabase/client";
 import { cn } from "~/lib/utils";
 
 const links = [
@@ -11,6 +15,24 @@ const links = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  }
 
   return (
     <nav className="border-b border-border bg-background">
@@ -34,6 +56,27 @@ export function Navbar() {
             </Link>
           ))}
         </div>
+        {user !== undefined && (
+          <div className="ml-auto flex items-center gap-3">
+            {user === null ? (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Sign in
+                </Link>
+                <Button asChild size="sm">
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                Sign out
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );
