@@ -8,8 +8,19 @@ import {
 } from "~/components/ui/card";
 import { formatDate } from "~/lib/dates";
 import type { Internship } from "./featured-internship-card";
+import { SaveButton } from "./save-button";
 
-export function InternshipCard({ internship }: { internship: Internship }) {
+interface InternshipCardProps {
+  internship: Internship;
+  saved?: boolean;
+  userId?: string | null;
+}
+
+export function InternshipCard({
+  internship,
+  saved = false,
+  userId = null,
+}: InternshipCardProps) {
   const deadlineText = internship.deadline
     ? formatDate(internship.deadline)
     : null;
@@ -20,7 +31,7 @@ export function InternshipCard({ internship }: { internship: Internship }) {
   const card = (
     <Card className="gap-0">
       <CardHeader className="pb-0">
-        <CardTitle className="text-base leading-snug">
+        <CardTitle className="text-base leading-snug pr-6">
           {internship.name}
         </CardTitle>
         <CardDescription>{internship.category}</CardDescription>
@@ -50,15 +61,26 @@ export function InternshipCard({ internship }: { internship: Internship }) {
     </Card>
   );
 
-  if (!internship.url) return card;
   return (
-    <a
-      href={internship.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block transition-opacity hover:opacity-80"
-    >
-      {card}
-    </a>
+    <div className="relative">
+      {internship.url ? (
+        <a
+          href={internship.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block transition-opacity hover:opacity-80"
+        >
+          {card}
+        </a>
+      ) : (
+        card
+      )}
+      <SaveButton
+        internshipId={internship.id}
+        initialSaved={saved}
+        userId={userId}
+        className="absolute top-2 right-2"
+      />
+    </div>
   );
 }

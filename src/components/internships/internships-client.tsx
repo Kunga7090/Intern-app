@@ -8,11 +8,15 @@ import { InternshipCard } from "./internship-card";
 interface InternshipsClientProps {
   internships: Internship[];
   cities: string[];
+  savedIds: Set<string>;
+  userId: string | null;
 }
 
 export function InternshipsClient({
   internships,
   cities,
+  savedIds,
+  userId,
 }: InternshipsClientProps) {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
@@ -30,7 +34,12 @@ export function InternshipsClient({
       {filtered.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((internship) => (
-            <InternshipCard key={internship.id} internship={internship} />
+            <InternshipCard
+              key={internship.id}
+              internship={internship}
+              saved={savedIds.has(internship.id)}
+              userId={userId}
+            />
           ))}
         </div>
       ) : (

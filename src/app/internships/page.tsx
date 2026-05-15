@@ -6,15 +6,27 @@ import { createClient } from "~/lib/supabase/server";
 
 export default async function InternshipsPage() {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("internships")
-    .select("*")
-    .order("created_at", { ascending: false });
+
+  const [{ data }, { data: { user } }] = await Promise.all([
+    supabase.from("internships").select("*").order("created_at", { ascending: false }),
+    supabase.auth.getUser(),
+  ]);
 
   const all = (data ?? []) as Internship[];
   const featured = all.filter((i) => i.featured);
   const rest = all.filter((i) => !i.featured);
   const uniqueCities = [...new Set(rest.map((i) => i.city))].sort();
+
+  let savedIds = new Set<string>();
+  if (user) {
+    const { data: saved } = await supabase
+      .from("saved_internships")
+      .select("internship_id")
+      .eq("user_id", user.id);
+    savedIds = new Set((saved ?? []).map((r) => r.internship_id as string));
+  }
+
+  const userId = user?.id ?? null;
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 flex flex-col gap-10">
@@ -37,6 +49,8 @@ export default async function InternshipsPage() {
               <FeaturedInternshipCard
                 key={internship.id}
                 internship={internship}
+                saved={savedIds.has(internship.id)}
+                userId={userId}
               />
             ))}
           </div>
@@ -49,7 +63,12 @@ export default async function InternshipsPage() {
         <h2 className="text-xl font-semibold text-foreground">
           All Internships
         </h2>
-        <InternshipsClient internships={rest} cities={uniqueCities} />
+        <InternshipsClient
+          internships={rest}
+          cities={uniqueCities}
+          savedIds={savedIds}
+          userId={userId}
+        />
       </section>
     </main>
   );

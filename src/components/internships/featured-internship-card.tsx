@@ -1,6 +1,7 @@
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { formatDate } from "~/lib/dates";
+import { SaveButton } from "./save-button";
 
 export interface Internship {
   id: string;
@@ -15,11 +16,17 @@ export interface Internship {
   application_opens?: string | null;
 }
 
+interface FeaturedInternshipCardProps {
+  internship: Internship;
+  saved?: boolean;
+  userId?: string | null;
+}
+
 export function FeaturedInternshipCard({
   internship,
-}: {
-  internship: Internship;
-}) {
+  saved = false,
+  userId = null,
+}: FeaturedInternshipCardProps) {
   const deadlineText = internship.deadline
     ? formatDate(internship.deadline)
     : null;
@@ -34,7 +41,7 @@ export function FeaturedInternshipCard({
           <Badge variant="default">Featured</Badge>
           <Badge variant="outline">{internship.category}</Badge>
         </div>
-        <CardTitle className="text-xl">{internship.name}</CardTitle>
+        <CardTitle className="text-xl pr-8">{internship.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-0">
         <div className="flex flex-wrap items-center gap-2 py-3">
@@ -61,15 +68,26 @@ export function FeaturedInternshipCard({
     </Card>
   );
 
-  if (!internship.url) return card;
   return (
-    <a
-      href={internship.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block transition-opacity hover:opacity-80"
-    >
-      {card}
-    </a>
+    <div className="relative">
+      {internship.url ? (
+        <a
+          href={internship.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block transition-opacity hover:opacity-80"
+        >
+          {card}
+        </a>
+      ) : (
+        card
+      )}
+      <SaveButton
+        internshipId={internship.id}
+        initialSaved={saved}
+        userId={userId}
+        className="absolute top-2 right-2"
+      />
+    </div>
   );
 }
