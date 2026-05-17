@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CityFilter } from "./city-filter";
-import type { Internship } from "./featured-internship-card";
+import type { Internship } from "./internship-card";
 import { InternshipCard } from "./internship-card";
 
 interface InternshipsClientProps {
@@ -20,6 +20,11 @@ export function InternshipsClient({
 }: InternshipsClientProps) {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
+  const cityCounts = cities.map((city) => ({
+    city,
+    count: internships.filter((i) => i.city === city).length,
+  }));
+
   const filtered = selectedCity
     ? internships.filter((i) => i.city === selectedCity)
     : internships;
@@ -27,7 +32,7 @@ export function InternshipsClient({
   return (
     <section className="flex flex-col gap-6">
       <CityFilter
-        cities={cities}
+        cities={cityCounts}
         selected={selectedCity}
         onSelect={setSelectedCity}
       />

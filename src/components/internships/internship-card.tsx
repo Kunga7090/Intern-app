@@ -7,8 +7,20 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { formatDate } from "~/lib/dates";
-import type { Internship } from "./featured-internship-card";
 import { SaveButton } from "./save-button";
+
+export interface Internship {
+  id: string;
+  name: string;
+  city: string;
+  type: "virtual" | "in-person";
+  category: string;
+  featured: boolean;
+  created_at: string;
+  url: string | null;
+  deadline?: string | null;
+  application_opens?: string | null;
+}
 
 interface InternshipCardProps {
   internship: Internship;

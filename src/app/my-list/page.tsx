@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Internship } from "~/components/internships/featured-internship-card";
+import type { Internship } from "~/components/internships/internship-card";
 import { InternshipCard } from "~/components/internships/internship-card";
 import { Button } from "~/components/ui/button";
 import { createClient } from "~/lib/supabase/server";
@@ -59,7 +59,8 @@ export default async function MyListPage() {
           My List
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {internships.length} saved internship{internships.length !== 1 ? "s" : ""}
+          {internships.length} saved internship
+          {internships.length !== 1 ? "s" : ""}
         </p>
       </header>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

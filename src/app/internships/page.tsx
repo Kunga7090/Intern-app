@@ -1,7 +1,5 @@
-import type { Internship } from "~/components/internships/featured-internship-card";
-import { FeaturedInternshipCard } from "~/components/internships/featured-internship-card";
+import type { Internship } from "~/components/internships/internship-card";
 import { InternshipsClient } from "~/components/internships/internships-client";
-import { Separator } from "~/components/ui/separator";
 import { createClient } from "~/lib/supabase/server";
 
 export default async function InternshipsPage() {
@@ -21,9 +19,7 @@ export default async function InternshipsPage() {
   ]);
 
   const all = (data ?? []) as Internship[];
-  const featured = all.filter((i) => i.featured);
-  const rest = all.filter((i) => !i.featured);
-  const uniqueCities = [...new Set(rest.map((i) => i.city))].sort();
+  const uniqueCities = [...new Set(all.map((i) => i.city))].sort();
 
   let savedIds = new Set<string>();
   if (user) {
@@ -43,36 +39,17 @@ export default async function InternshipsPage() {
           Internships
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Dates are based on previous application cycles and may change. Please check the official website for the most current information.
+          Dates are based on previous application cycles and may change. Please
+          check the official website for the most current information.
         </p>
       </header>
-
-      {featured.length > 0 && (
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold text-foreground">
-            Featured Opportunities
-          </h2>
-          <div className="flex flex-col gap-4">
-            {featured.map((internship) => (
-              <FeaturedInternshipCard
-                key={internship.id}
-                internship={internship}
-                saved={savedIds.has(internship.id)}
-                userId={userId}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      <Separator />
 
       <section className="flex flex-col gap-4">
         <h2 className="text-xl font-semibold text-foreground">
           All Internships
         </h2>
         <InternshipsClient
-          internships={rest}
+          internships={all}
           cities={uniqueCities}
           savedIds={savedIds}
           userId={userId}
