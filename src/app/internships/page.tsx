@@ -33,28 +33,13 @@ export default async function InternshipsPage() {
   const userId = user?.id ?? null;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 flex flex-col gap-10">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Internships
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Dates are based on previous application cycles and may change. Please
-          check the official website for the most current information.
-        </p>
-      </header>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-semibold text-foreground">
-          All Internships
-        </h2>
-        <InternshipsClient
-          internships={all}
-          cities={uniqueCities}
-          savedIds={savedIds}
-          userId={userId}
-        />
-      </section>
+    <main className="mx-auto max-w-5xl px-4 py-10 flex flex-col gap-6">
+      <InternshipsClient
+        internships={all}
+        cities={uniqueCities}
+        savedIds={savedIds}
+        userId={userId}
+      />
     </main>
   );
 }
