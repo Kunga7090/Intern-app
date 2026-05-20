@@ -22,7 +22,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#e9eff5" />
         <g transform="translate(160 44)">
@@ -74,7 +75,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#ece5f1" />
         <g
@@ -103,7 +105,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#e3eed8" />
         <circle
@@ -150,7 +153,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#e8e9f2" />
         <line
@@ -194,7 +198,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#dceae8" />
         <path
@@ -221,7 +226,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#f2e3d6" />
         <path
@@ -254,7 +260,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#e3e7ee" />
         <g fill="#6e7c93" opacity="0.6">
@@ -282,7 +289,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#ebe6dd" />
         <g fill="#9a8862" opacity="0.65">
@@ -308,7 +316,8 @@ const BANNERS: Record<string, BannerConfig> = {
         viewBox="0 0 320 88"
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true" style={{ width: "100%", height: "100%" }}
+        aria-hidden="true"
+        style={{ width: "100%", height: "100%" }}
       >
         <rect width="320" height="88" fill="#ece6db" />
         <g fill="none" stroke="#9a8a6c" strokeWidth="1" opacity="0.55">

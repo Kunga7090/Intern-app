@@ -238,14 +238,10 @@ function ListRow({
           : "—";
 
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") onClick();
-      }}
-      role="button"
-      tabIndex={0}
-      className="grid items-center gap-4 px-5 py-3.5 border-b border-border cursor-pointer hover:bg-muted/50 transition-colors last:border-0"
+      className="grid items-center gap-4 px-5 py-3.5 border-b border-border cursor-pointer hover:bg-muted/50 transition-colors last:border-0 w-full text-left"
       style={{ gridTemplateColumns: "8px 2.5fr 1fr 1fr 1fr 1fr 36px" }}
     >
       <div
@@ -298,7 +294,7 @@ function ListRow({
         </span>
       </div>
       <SaveButton internshipId={item.id} initialSaved={saved} userId={null} />
-    </div>
+    </button>
   );
 }
 
@@ -341,16 +337,19 @@ function Drawer({
       aria-modal="true"
     >
       <div
+        role="document"
         className="h-full overflow-y-auto flex flex-col bg-card border-l border-border"
         style={{
           width: "min(560px, 100vw)",
           animation: "drawer-in 0.22s ease",
         }}
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="sticky top-0 flex items-center gap-3 px-5 py-4 border-b border-border bg-card z-10">
           <button
+            type="button"
             onClick={onClose}
             className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
           >
@@ -729,6 +728,7 @@ export function InternshipsClient({
             />
             {q && (
               <button
+                type="button"
                 onClick={() => setQ("")}
                 className="text-muted-foreground hover:text-foreground"
               >
@@ -803,7 +803,11 @@ export function InternshipsClient({
           </select>
 
           {hasFilters && (
-            <button onClick={clearAll} className={cn(chipBase, "gap-1")}>
+            <button
+              type="button"
+              onClick={clearAll}
+              className={cn(chipBase, "gap-1")}
+            >
               <XIcon size={11} /> Clear
             </button>
           )}
@@ -812,6 +816,7 @@ export function InternshipsClient({
         {/* Row 2: category chips + quick toggles */}
         <div className="flex gap-1.5 flex-wrap items-center">
           <button
+            type="button"
             onClick={() => setCat("all")}
             className={cn(chipBase, cat === "all" && chipActive)}
           >
@@ -822,6 +827,7 @@ export function InternshipsClient({
           </button>
           {CATEGORIES.filter((k) => catCounts[k]).map((k) => (
             <button
+              type="button"
               key={k}
               onClick={() => setCat(cat === k ? "all" : k)}
               className={cn(chipBase, cat === k && chipActive)}
@@ -843,6 +849,7 @@ export function InternshipsClient({
           />
 
           <button
+            type="button"
             onClick={() =>
               setStatusFilter(
                 statusFilter === "deadline-soon" ? "all" : "deadline-soon",
@@ -857,6 +864,7 @@ export function InternshipsClient({
             <FlameIcon /> Closing soon
           </button>
           <button
+            type="button"
             onClick={() =>
               setStatusFilter(statusFilter === "open" ? "all" : "open")
             }
@@ -914,6 +922,7 @@ export function InternshipsClient({
         </p>
         <div className="flex overflow-hidden rounded-lg border border-border bg-card">
           <button
+            type="button"
             onClick={() => setView("grid")}
             className={cn(
               "flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground transition-colors",
@@ -923,6 +932,7 @@ export function InternshipsClient({
             <GridIcon /> Grid
           </button>
           <button
+            type="button"
             onClick={() => setView("list")}
             className={cn(
               "flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground transition-colors",
@@ -944,6 +954,7 @@ export function InternshipsClient({
             Try clearing a few filters or broadening your search.
           </p>
           <button
+            type="button"
             onClick={clearAll}
             className="mt-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium hover:border-foreground/30 transition-colors"
           >

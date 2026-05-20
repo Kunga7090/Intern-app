@@ -336,7 +336,7 @@ export default async function Home() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
-            {steps.map((step, i) => (
+            {steps.map((step, _i) => (
               <div
                 key={step.num}
                 className="flex flex-col gap-3 pl-6 border-l border-border relative py-1"
