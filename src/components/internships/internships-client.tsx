@@ -13,6 +13,7 @@ interface InternshipsClientProps {
   cities: string[];
   savedIds: Set<string>;
   userId: string | null;
+  initialCat?: string;
 }
 
 const CATEGORIES = [
@@ -506,9 +507,10 @@ export function InternshipsClient({
   cities,
   savedIds,
   userId,
+  initialCat = "all",
 }: InternshipsClientProps) {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState("all");
+  const [cat, setCat] = useState(initialCat);
   const [city, setCity] = useState("all");
   const [mode, setMode] = useState("all");
   const [paid, setPaid] = useState("all");
@@ -707,14 +709,7 @@ export function InternshipsClient({
       </header>
 
       {/* ── Sticky filter bar ───────────────────────────────── */}
-      <div
-        className="sticky top-14 z-30 flex flex-col gap-3 py-4 border-b border-border"
-        style={{
-          background:
-            "color-mix(in oklab, var(--color-background) 92%, transparent)",
-          backdropFilter: "blur(8px)",
-        }}
-      >
+      <div className="sticky top-14 z-30 flex flex-col gap-3 py-4 border-b border-border bg-background">
         {/* Row 1: search + selects */}
         <div className="flex items-center gap-2 flex-wrap">
           {/* Search */}

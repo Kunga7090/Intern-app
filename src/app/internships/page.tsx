@@ -2,7 +2,12 @@ import type { Internship } from "~/components/internships/internship-card";
 import { InternshipsClient } from "~/components/internships/internships-client";
 import { createClient } from "~/lib/supabase/server";
 
-export default async function InternshipsPage() {
+export default async function InternshipsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}) {
+  const { cat: initialCat } = await searchParams;
   const supabase = await createClient();
 
   const [
@@ -39,6 +44,7 @@ export default async function InternshipsPage() {
         cities={uniqueCities}
         savedIds={savedIds}
         userId={userId}
+        initialCat={initialCat ?? "all"}
       />
     </main>
   );

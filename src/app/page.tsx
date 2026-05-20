@@ -119,12 +119,139 @@ const steps = [
 ];
 
 const FEATURED_CATS = [
-  { key: "STEM", label: "STEM" },
-  { key: "Biology", label: "Biology" },
-  { key: "Arts", label: "Arts" },
-  { key: "Mathematics", label: "Mathematics" },
-  { key: "Business", label: "Business" },
-  { key: "Government", label: "Government" },
+  {
+    key: "STEM",
+    label: "STEM",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18" />
+      </svg>
+    ),
+  },
+  {
+    key: "Biology",
+    label: "Biology",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6 2v6a6 6 0 0 0 12 0V2" />
+        <path d="M6 14v6a6 6 0 0 0 12 0v-6" />
+        <line x1="12" y1="2" x2="12" y2="22" />
+      </svg>
+    ),
+  },
+  {
+    key: "Arts",
+    label: "Arts",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+        <path d="M2 2l7.586 7.586" />
+        <circle cx="11" cy="11" r="2" />
+      </svg>
+    ),
+  },
+  {
+    key: "Mathematics",
+    label: "Mathematics",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="4" y="2" width="16" height="20" rx="2" />
+        <line x1="8" y1="10" x2="16" y2="10" />
+        <line x1="12" y1="6" x2="12" y2="14" />
+        <line x1="8" y1="18" x2="16" y2="18" />
+      </svg>
+    ),
+  },
+  {
+    key: "Business",
+    label: "Business",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    ),
+  },
+  {
+    key: "Government",
+    label: "Government",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 3 2 7.5V9h20V7.5Z" />
+        <path d="M5 9v10" />
+        <path d="M19 9v10" />
+        <path d="M12 9v10" />
+        <path d="M2 19h20" />
+      </svg>
+    ),
+  },
 ];
 
 export default async function Home() {
@@ -286,19 +413,24 @@ export default async function Home() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {FEATURED_CATS.map(({ key, label }) => (
+            {FEATURED_CATS.map(({ key, label, icon }) => (
               <Link
                 key={key}
                 href={`/internships?cat=${key}`}
                 className="flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-sm"
               >
-                <div className="flex flex-col gap-0.5">
-                  <span className="font-semibold text-[15px] tracking-tight">
-                    {label}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {catCounts[key] ?? 0} programs
-                  </span>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-foreground shrink-0">
+                    {icon}
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-[15px] tracking-tight">
+                      {label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {catCounts[key] ?? 0} programs
+                    </span>
+                  </div>
                 </div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -310,7 +442,7 @@ export default async function Home() {
                   strokeWidth="1.75"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-muted-foreground"
+                  className="text-muted-foreground shrink-0"
                   aria-hidden="true"
                 >
                   <path d="m9 18 6-6-6-6" />
