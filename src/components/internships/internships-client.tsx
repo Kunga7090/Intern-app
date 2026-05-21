@@ -514,6 +514,7 @@ export function InternshipsClient({
   const [city, setCity] = useState("all");
   const [mode, setMode] = useState("all");
   const [paid, setPaid] = useState("all");
+  const [grade, setGrade] = useState("all");
   const [season, setSeason] = useState("all");
   const [sort, setSort] = useState("deadline");
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -576,6 +577,10 @@ export function InternshipsClient({
         r = r.filter((i) => i.paid === "paid" || i.paid === "stipend");
       else r = r.filter((i) => i.paid === paid);
     }
+    if (grade !== "all")
+      r = r.filter(
+        (i) => Array.isArray(i.grades) && i.grades.includes(Number(grade)),
+      );
     if (season !== "all")
       r = r.filter(
         (i) => Array.isArray(i.seasons) && i.seasons.includes(season),
@@ -605,7 +610,18 @@ export function InternshipsClient({
       r.sort((a, b) => a.name.localeCompare(b.name));
     }
     return r;
-  }, [internships, q, cat, city, mode, paid, season, statusFilter, sort]);
+  }, [
+    internships,
+    q,
+    cat,
+    city,
+    mode,
+    paid,
+    grade,
+    season,
+    statusFilter,
+    sort,
+  ]);
 
   const hasFilters =
     q ||
@@ -613,6 +629,7 @@ export function InternshipsClient({
     city !== "all" ||
     mode !== "all" ||
     paid !== "all" ||
+    grade !== "all" ||
     season !== "all" ||
     statusFilter !== "all";
 
@@ -622,6 +639,7 @@ export function InternshipsClient({
     setCity("all");
     setMode("all");
     setPaid("all");
+    setGrade("all");
     setSeason("all");
     setStatusFilter("all");
   };
@@ -634,10 +652,10 @@ export function InternshipsClient({
     height: 32,
     padding: "0 28px 0 12px",
     borderRadius: 9999,
-    border: "1px solid var(--color-border)",
-    background: "var(--color-card)",
+    border: "1px solid oklch(0.88 0 0)",
+    background: "oklch(1 0 0)",
     fontSize: 13,
-    color: "var(--color-muted-foreground)",
+    color: "oklch(0.145 0 0)",
     fontWeight: 500,
     fontFamily: "inherit",
     appearance: "none",
@@ -662,8 +680,9 @@ export function InternshipsClient({
           Find your first internship.
         </h1>
         <p className="mt-2 text-sm text-muted-foreground max-w-xl">
-          Browse {stats.total} programs across Massachusetts. Dates reflect the
-          most recent cycle — check official sites for the latest.
+          Browse {stats.total} programs across Massachusetts — from week-long
+          museum residencies to paid research at the Broad. Dates reflect the
+          most recent cycle; check official sites for the latest.
         </p>
 
         {/* Stats strip */}
@@ -765,6 +784,17 @@ export function InternshipsClient({
             <option value="paid">Paid</option>
             <option value="stipend">Stipend</option>
             <option value="unpaid">Unpaid</option>
+          </select>
+          <select
+            style={selectStyle}
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+          >
+            <option value="all">Any grade</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
           </select>
           <select
             style={selectStyle}
