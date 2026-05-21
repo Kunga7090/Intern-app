@@ -12,6 +12,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/internships", label: "Internships" },
   { href: "/my-list", label: "My List" },
+  { href: "/resources", label: "Resources" },
 ];
 
 export function Navbar() {
