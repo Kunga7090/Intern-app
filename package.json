@@ -36,7 +36,7 @@
     "@types/react-dom": "^19",
     "cheerio": "^1.0.0",
     "domhandler": "^6.0.1",
-    "supabase": "^2.90.0",
+    "supabase": "^2.101.0",
     "tailwindcss": "^4",
     "tsx": "^4.19.2",
     "typescript": "^5"

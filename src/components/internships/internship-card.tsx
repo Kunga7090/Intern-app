@@ -155,7 +155,7 @@ export function InternshipCard({
       )}
     >
       {/* Banner */}
-      <CategoryBanner category={internship.category} height={88} />
+      <CategoryBanner category={internship.category} height={160} />
 
       {/* Floating save button */}
       <div className="absolute top-2.5 right-2.5 z-10">
