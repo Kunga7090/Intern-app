@@ -1,0 +1,57 @@
+-- Delete all internship programs whose URLs return 404, connection errors,
+-- or redirect to hijacked/wrong domains. Verified by automated URL scan.
+
+delete from public.internships where name in (
+  -- Domain hijacked (redirects to gambling site)
+  'Boston Children''s Theatre Apprenticeship',
+
+  -- HTTP 404 — page does not exist
+  'Google Computer Science Summer Institute (CSSI)',
+  'Harvard Medical School SHARP Program',
+  'Harvard Forest Summer Research Program',
+  'Mass Audubon Youth Conservation Internship',
+  'City of Boston Youth Employment Program (YES)',
+  'ICA Boston Teen Arts Council',
+  'Peabody Essex Museum Teen Advisory Board',
+  'Draper Laboratory STEM Apprenticeship',
+  'Marine Biological Laboratory (MBL) High School Internship',
+  'Northeastern PEAK Experiences',
+  'Boston Public Health Commission Youth Internship',
+  'GrubStreet Young Adult Writing Intensive',
+  'Dana-Farber Jimmy Fund Clinic Youth Volunteer Program',
+  'Smith College Summer Science & Engineering Program (SSEP)',
+  'Wellesley College Exploration Summer Program',
+  'Appalachian Mountain Club (AMC) Teen Trail Crew',
+  'New England Conservatory Pre-College Program',
+  'Babson College Summer Study Entrepreneurship Program',
+  'Bentley University Business Explore Program',
+  'Northeastern D''Amore-McKim Business Pre-College Program',
+  'Harvard Business School Summer Venture in Management Program',
+  'Boston Ballet Pre-Professional Summer Intensive',
+  'Isabella Stewart Gardner Museum Teen Internship',
+  'American Repertory Theater (ART) Youth Programs',
+  'Berklee College of Music Five-Week Summer Performance Program',
+  'MassArt Pre-College Summer Program',
+  'Worcester Art Museum Teen Docent Program',
+  'Dana-Farber Cancer Research Intern',
+  'Broad Institute Genomics Intern',
+  'Mass General Hospital Research Fellow',
+  'Boston Symphony Orchestra Arts Intern',
+  'Nantucket Conservation Foundation Intern',
+  'Wayfair Data Science Intern',
+  'Rapid7 Cybersecurity Intern',
+  'Biogen Neuroscience Research Intern',
+  'Whitehead Institute Biology Research Intern',
+  'Raytheon Technologies Engineering Intern',
+  'Wellington Management Finance Intern',
+  'State Street Quantitative Finance Intern',
+  'MassMutual Engineering Intern',
+  'New Bedford Whaling Museum Arts Intern',
+  'Lawrence Community Works Nonprofit Intern',
+
+  -- Connection refused / site unreachable
+  'Junior Achievement Finance Park',
+  'Boston Math Circle',
+  'GE Vernova Grid Engineering Intern',
+  'Cape Cod Times Journalism Intern'
+);
